@@ -76,12 +76,11 @@
             background-color: #56038a;
         }
 
-        /* Pure CSS Wish Box Layout */
         .wish-container {
             max-width: 600px;
             margin: 0 auto 40px auto;
             padding: 0 20px;
-            display: none; /* Controlled cleanly by script without complex layout dependencies */
+            display: none;
         }
 
         .wish-box {
@@ -106,7 +105,6 @@
             text-align: right;
         }
 
-        /* Gallery Layout */
         .gallery-container {
             max-width: 1000px;
             margin: 40px auto;
@@ -147,7 +145,6 @@
             color: #ff477e;
         }
 
-        /* Unbreakable CSS Floating Particle Animations */
         .balloon {
             position: fixed;
             bottom: -100px;
@@ -201,6 +198,11 @@
             <button class="celebrate-btn" onclick="triggerCelebration()">Click for Magic ✨</button>
             <button class="wish-btn" onclick="toggleWish()">My Wish for You 💜</button>
         </div>
+
+        <!-- Local Audio Component linking to your uploaded song file -->
+        <audio id="birthday-music" loop>
+            <source src="birthday-song.mp3" type="audio/mpeg">
+        </audio>
     </header>
 
     <div class="wish-container" id="birthday-letter">
@@ -213,7 +215,7 @@
     </div>
 
     <div class="gallery-container">
-        <h2>Our Favorite Memories 📸</h2>
+        <h2> Favorite Memories & Pics 😋 📸</h2>
         <div class="photo-grid">
             <div class="photo-card">
                 <img src="https://i.ibb.co/QFgTzxJ5/IMG-20260529-WA0024.jpg" alt="Memory 1">
@@ -231,11 +233,19 @@
     </div>
 
     <script>
-        // Unbreakable Pure DOM Particle Generator
+        // Smooth local audio trigger logic
+        function playLocalMusic() {
+            const music = document.getElementById('birthday-music');
+            if (music) {
+                music.play().catch(error => {
+                    console.log("Audio playback note:", error);
+                });
+            }
+        }
+
         function launchEffects() {
             const colors = ['#ff477e', '#ff7096', '#ff85a1', '#ff0055', '#4ae3ff', '#ffdf6d', '#7209b7'];
             
-            // 1. Spawns 20 Rising Balloons
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const balloon = document.createElement('div');
@@ -248,7 +258,6 @@
                 }, i * 80);
             }
 
-            // 2. Spawns 40 Raining Confetti Pieces
             for (let j = 0; j < 40; j++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
@@ -263,16 +272,19 @@
         }
 
         function triggerCelebration() {
-            launchEffects();
+            playLocalMusic(); // Starts the song
+            launchEffects();   // Launches visuals
         }
 
         function toggleWish() {
+            playLocalMusic(); // Starts the song if they click the wish button first instead
+            
             const letter = document.getElementById('birthday-letter');
             if (letter.style.display === 'block') {
                 letter.style.display = 'none';
             } else {
                 letter.style.display = 'block';
-                launchEffects(); // Triggers animations seamlessly when letter is revealed
+                launchEffects(); 
             }
         }
     </script>
