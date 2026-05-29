@@ -83,7 +83,7 @@
             max-width: 600px;
             margin: 0 auto 40px auto;
             padding: 0 20px;
-            display: none; /* Changed from max-height to display for bulletproof rendering */
+            display: none;
         }
 
         .wish-box {
@@ -149,6 +149,23 @@
             color: #ff477e;
         }
 
+        /* Pure CSS Floating Balloons */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            z-index: 999;
+            pointer-events: none; /* Stops balloons from blocking image clicks */
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -187,30 +204,28 @@
         <div class="photo-grid">
             <div class="photo-card">
                 <img src="https://i.ibb.co/QFgTzxJ5/IMG-20260529-WA0024.jpg" alt="Memory 1">
-                <div class="photo-caption">Best day ever! 🥰</div>
+                <div class="photo-caption">Best smile ever! 🥰</div>
             </div>
             <div class="photo-card">
                 <img src="https://i.ibb.co/SDS3my77/IMG-20260529-WA0011.jpg" alt="Memory 2">
-                <div class="photo-caption">Always laughing with you 😂</div>
+                <div class="photo-caption">Always you 😂</div>
             </div>
             <div class="photo-card">
                 <img src="https://i.ibb.co/xS2h9Yw2/IMG-20260529-WA0021.jpg" alt="Memory 3">
-                <div class="photo-caption">To many more adventures! ✈️</div>
+                <div class="photo-caption">To many more beautiful adventures! ✈️</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Custom synthesized electronic party tone generator (Immune to CORS blocks)
+        // Audio Pop Sound Generator
         function playCelebrationSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Note 1: High energetic pop chime
                 let osc1 = audioCtx.createOscillator();
                 let gain1 = audioCtx.createGain();
                 osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 Key
+                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
                 gain1.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
                 osc1.connect(gain1);
@@ -218,12 +233,11 @@
                 osc1.start();
                 osc1.stop(audioCtx.currentTime + 0.4);
 
-                // Note 2: Harmonized secondary high tone split second later
                 setTimeout(() => {
                     let osc2 = audioCtx.createOscillator();
                     let gain2 = audioCtx.createGain();
                     osc2.type = 'sine';
-                    osc2.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 Key
+                    osc2.frequency.setValueAtTime(880, audioCtx.currentTime); 
                     gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
                     gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
                     osc2.connect(gain2);
@@ -232,13 +246,33 @@
                     osc2.stop(audioCtx.currentTime + 0.3);
                 }, 80);
             } catch(e) {
-                console.log("Audio API context blocked:", e);
+                console.log("Audio context blocked:", e);
+            }
+        }
+
+        // Floating Balloons Generator Function
+        function releaseBalloons() {
+            const colors = ['#ff477e', '#ff7096', '#ff85a1', '#ff0055', '#ff9ebb', '#4ae3ff', '#ffdf6d'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = (Math.random() * 90) + 'vw'; // Keeps them within mobile view
+                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    balloon.style.animationDuration = (Math.random() * 2 + 2.5) + 's'; 
+                    
+                    document.body.appendChild(balloon);
+                    setTimeout(() => balloon.remove(), 4000);
+                }, i * 100);
             }
         }
 
         function triggerCelebration() {
+            // 1. Play chime sound
             playCelebrationSound();
 
+            // 2. Fire full confetti burst
             if (typeof confetti === 'function') {
                 confetti({
                     particleCount: 150,
@@ -247,6 +281,9 @@
                     colors: ['#ff477e', '#ff7096', '#ff85a1', '#4ae3ff', '#ffdf6d']
                 });
             }
+
+            // 3. Launch background floating balloons
+            releaseBalloons();
         }
 
         function toggleWish() {
@@ -255,9 +292,3 @@
                 letter.style.display = 'none';
             } else {
                 letter.style.display = 'block';
-                triggerCelebration(); // Fires confetti sound combo instantly when opened
-            }
-        }
-    </script>
-</body>
-</html>
