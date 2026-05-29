@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday!</title>
+    <!-- High-performance Canvas Confetti library script attachment -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         /* Modern Fonts */
         @import url('https://googleapis.com');
@@ -19,7 +21,7 @@
         }
 
         header {
-            padding: 50px 20px;
+            padding: 50px 20px 20px 20px;
         }
 
         h1 {
@@ -35,11 +37,19 @@
             font-size: 1.3rem;
             color: #6c757d;
             margin-top: 0;
+            margin-bottom: 25px;
         }
 
-        /* Action Button */
-        .celebrate-btn {
-            background-color: #ff477e;
+        /* Action Buttons Layout */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .celebrate-btn, .wish-btn {
             color: white;
             border: none;
             padding: 15px 35px;
@@ -47,13 +57,66 @@
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 71, 126, 0.4);
             transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .celebrate-btn {
+            background-color: #ff477e;
+            box-shadow: 0 4px 15px rgba(255, 71, 126, 0.4);
         }
 
         .celebrate-btn:hover {
             transform: scale(1.05);
             background-color: #ff2a63;
+        }
+
+        .wish-btn {
+            background-color: #7209b7;
+            box-shadow: 0 4px 15px rgba(114, 9, 183, 0.4);
+        }
+
+        .wish-btn:hover {
+            transform: scale(1.05);
+            background-color: #56038a;
+        }
+
+        /* Hidden Letter / Wish Container */
+        .wish-container {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease-out, opacity 0.6s ease-out;
+        }
+
+        /* Revealed State handled by JavaScript class toggle */
+        .wish-container.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .wish-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 2px dashed #ff7096;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .wish-box p {
+            margin-bottom: 15px;
+        }
+
+        .wish-box p:last-child {
+            margin-bottom: 0;
+            font-weight: bold;
+            color: #ff477e;
+            text-align: right;
         }
 
         /* Gallery Layout */
@@ -102,7 +165,7 @@
             color: #ff477e;
         }
 
-        /* Pure CSS Balloon Pop-up Elements */
+        /* Pure CSS Balloon Pop-up Elements (Kept as fallback background element) */
         .balloon {
             position: fixed;
             bottom: -100px;
@@ -126,6 +189,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .photo-grid { grid-template-columns: 1fr; }
+            .btn-container { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
@@ -135,12 +199,30 @@
         <h1>Happy Birthday Chibaa 💜💜! 🎂</h1>
         <p class="subtitle">Wishing you the most magical, amazing day ever!</p>
         
-        <!-- Error-free Pure Animation Button -->
-        <button class="celebrate-btn" onclick="releaseBalloons()">Click for Magic ✨</button>
+        <!-- Dual Action Buttons -->
+        <div class="btn-container">
+            <button class="celebrate-btn" onclick="triggerCelebration()">Click for Magic ✨</button>
+            <button class="wish-btn" onclick="toggleWish()">My Wish for You 💜</button>
+        </div>
+
+        <!-- Preloaded High-Quality Party Horn Sound Node -->
+        <audio id="party-sound" preload="auto">
+            <source src="https://mixkit.co" type="audio/wav">
+        </audio>
     </header>
 
+    <!-- Hidden Letter Element -->
+    <div class="wish-container" id="birthday-letter">
+        <div class="wish-box">
+            <p>Happy Birthday! 🎉</p>
+            <p>On your special day, my wish for you is that this upcoming year brings you absolute happiness, brilliant new adventures, and success in everything you set out to achieve.</p>
+            <p>Thank you for always being such an incredible person and for all the amazing memories we share. I hope this tiny digital surprise brings a massive smile to your face today!</p>
+            <p>Cheers to you! 🥂</p>
+        </div>
+    </div>
+
     <div class="gallery-container">
-        <h2>Favorite Memories and Pics 😋 📸</h2>
+        <h2>Favorite Memories & Pics 😋 📸</h2>
         <div class="photo-grid">
             
             <div class="photo-card">
@@ -162,28 +244,53 @@
     </div>
 
     <script>
-        // Simple internal generator that shoots colorful party balloons up the page
+        // Fires full-screen confetti explosion and executes audio player sync
+        function triggerCelebration() {
+            // 1. Fire the Audio Sound Node instantly
+            const sound = document.getElementById('party-sound');
+            if (sound) {
+                sound.currentTime = 0; // Rewinds sound file so rapid multi-clicks fire continuously
+                sound.play().catch(e => console.log("Audio playback note:", e));
+            }
+
+            // 2. Fire the High-Performance Confetti Explosion Side-by-Side
+            if (typeof confetti === 'function') {
+                // Primary center blast
+                confetti({
+                    particleCount: 180,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#ff477e', '#ff7096', '#ff85a1', '#ff0055', '#4ae3ff', '#ffdf6d']
+                });
+                
+                // Side cannons firing inwards simultaneously for full screen coverage
+                confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } });
+            }
+            
+            // 3. Fallback background scrolling balloons
+            releaseBalloons();
+        }
+
+        // Background scrolling balloons floating up layout structure
         function releaseBalloons() {
             const colors = ['#ff477e', '#ff7096', '#ff85a1', '#ff0055', '#ff9ebb', '#4ae3ff', '#ffdf6d'];
-            
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     const balloon = document.createElement('div');
                     balloon.className = 'balloon';
-                    
-                    // Assign random starting coordinates and background highlights
                     balloon.style.left = Math.random() * 100 + 'vw';
                     balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                     balloon.style.animationDuration = (Math.random() * 2 + 2) + 's'; 
-                    
                     document.body.appendChild(balloon);
-                    
-                    // Clean up nodes after completion
                     setTimeout(() => balloon.remove(), 4000);
-                }, i * 80); // Creates a beautifully spaced waterfall rush effect
+                }, i * 100);
             }
         }
-    </script>
-</body>
-</html>
 
+        // Toggles visibility of the sweet letter panel smoothly
+        function toggleWish() {
+            const letter = document.getElementById('birthday-letter');
+            letter.classList.toggle('open');
+            
+            // Celebrate when they unlock your hidden message card
