@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday!</title>
-    <!-- Canvas Confetti Library for the celebration effect -->
-    <script src="https://jsdelivr.net"></script>
     <style>
-        /* Modern Web Fonts */
+        /* Modern Fonts */
         @import url('https://googleapis.com');
 
-        /* Global Styles */
         body {
             font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 100%);
@@ -21,11 +18,8 @@
             overflow-x: hidden;
         }
 
-        /* Header / Birthday Message Section */
         header {
             padding: 50px 20px;
-            position: relative;
-            z-index: 10; /* Keeps button accessible above background elements */
         }
 
         h1 {
@@ -43,7 +37,7 @@
             margin-top: 0;
         }
 
-        /* Interactive Button Section */
+        /* Action Button */
         .celebrate-btn {
             background-color: #ff477e;
             color: white;
@@ -55,8 +49,6 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(255, 71, 126, 0.4);
             transition: transform 0.2s, background-color 0.2s;
-            position: relative;
-            z-index: 20; /* Ensures click events aren't intercepted */
         }
 
         .celebrate-btn:hover {
@@ -64,13 +56,11 @@
             background-color: #ff2a63;
         }
 
-        /* Photo Gallery Layout */
+        /* Gallery Layout */
         .gallery-container {
             max-width: 1000px;
             margin: 40px auto;
             padding: 0 20px;
-            position: relative;
-            z-index: 10;
         }
 
         h2 {
@@ -86,7 +76,6 @@
             gap: 25px;
         }
 
-        /* Individual Photo Styling */
         .photo-card {
             background: white;
             padding: 15px;
@@ -113,13 +102,27 @@
             color: #ff477e;
         }
 
-        /* Animations */
+        /* Pure CSS Balloon Pop-up Elements */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            z-index: 999;
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
 
-        /* Responsive design tweaks */
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             .photo-grid { grid-template-columns: 1fr; }
@@ -128,82 +131,59 @@
 </head>
 <body>
 
-    <!-- Main Greeting Area -->
     <header>
-        <h1>Happy Birthday Chibaa 💜! 🎂</h1>
+        <h1>Happy Birthday Chibaa 💜💜! 🎂</h1>
         <p class="subtitle">Wishing you the most magical, amazing day ever!</p>
         
-        <!-- Fixed Action Button Trigger -->
-        <button class="celebrate-btn" onclick="playMusicAndConfetti()">Click for Magic ✨</button>
-        
-        <!-- HTML5 Audio Node -->
-        <audio id="birthday-music" loop preload="auto">
-            <source src="https://soundhelix.com" type="audio/mpeg">
-        </audio>
+        <!-- Error-free Pure Animation Button -->
+        <button class="celebrate-btn" onclick="releaseBalloons()">Click for Magic ✨</button>
     </header>
 
-    <!-- Interactive Memories Photo Gallery Grid -->
     <div class="gallery-container">
-        <h2> Favorite Memories & Pics 😋📸</h2>
+        <h2>Favorite Memories and Pics 😋 📸</h2>
         <div class="photo-grid">
             
-            <!-- PHOTO 1 -->
             <div class="photo-card">
-                <img src="https://i.ibb.co/QFgTzxJ5/IMG-20260529-WA0024.jpg" alt="Birthday Memory 1">
+                <img src="https://i.ibb.co/QFgTzxJ5/IMG-20260529-WA0024.jpg" alt="Memory 1">
                 <div class="photo-caption">Best smile ever! 🥰</div>
             </div>
 
-            <!-- PHOTO 2 -->
             <div class="photo-card">
-                <img src="https://i.ibb.co/SDS3my77/IMG-20260529-WA0011.jpg" alt="Birthday Memory 2">
+                <img src="https://i.ibb.co/SDS3my77/IMG-20260529-WA0011.jpg" alt="Memory 2">
                 <div class="photo-caption">Always you 😂</div>
             </div>
 
-            <!-- PHOTO 3 -->
             <div class="photo-card">
-                <img src="https://i.ibb.co/HTpstjmG/IMG-20260529-WA0007.jpg" alt="Birthday Memory 3">
+                <img src="https://i.ibb.co/HTpstjmG/IMG-20260529-WA0007.jpg" alt="Memory 3">
                 <div class="photo-caption">To many more adventures! ✈️</div>
             </div>
 
         </div>
     </div>
 
-    <!-- JavaScript For Interactivity -->
     <script>
-        // Separate autonomous function for executing confetti particles safely
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 150,
-                    spread: 80,
-                    origin: { y: 0.6 },
-                    colors: ['#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7']
-                });
-            } else {
-                console.error("Confetti library script failed to load from CDN.");
-            }
-        }
-
-        // Dedicated click intercept handler managing both async actions safely
-        function playMusicAndConfetti() {
-            // 1. Instantly fire visual effects
-            triggerConfetti();
+        // Simple internal generator that shoots colorful party balloons up the page
+        function releaseBalloons() {
+            const colors = ['#ff477e', '#ff7096', '#ff85a1', '#ff0055', '#ff9ebb', '#4ae3ff', '#ffdf6d'];
             
-            // 2. Safely capture the audio node and handle conditional browser play promises
-            const music = document.getElementById('birthday-music');
-            if (music) {
-                music.play()
-                    .then(() => console.log("Audio streaming started successfully."))
-                    .catch(error => {
-                        console.warn("Audio play state failure block caught:", error);
-                    });
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    
+                    // Assign random starting coordinates and background highlights
+                    balloon.style.left = Math.random() * 100 + 'vw';
+                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    balloon.style.animationDuration = (Math.random() * 2 + 2) + 's'; 
+                    
+                    document.body.appendChild(balloon);
+                    
+                    // Clean up nodes after completion
+                    setTimeout(() => balloon.remove(), 4000);
+                }, i * 80); // Creates a beautifully spaced waterfall rush effect
             }
         }
-
-        // Run an initial quick blast safely once structural layout loads
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(triggerConfetti, 800);
-        });
     </script>
 </body>
 </html>
+
